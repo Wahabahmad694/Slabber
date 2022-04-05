@@ -50,16 +50,15 @@ fun LoginScreen(navController: NavController) {
             )
             Card(
                 Modifier
-                    .weight(2f)
-                    .padding(8.dp),
-                shape = RoundedCornerShape(32.dp)
+                    .weight(2f),
+                shape = RoundedCornerShape(5.dp)
             ) {
                 Column(
                     Modifier
                         .fillMaxSize()
                         .padding(32.dp)
                 ) {
-                    Text(text = "Welcome Back!", fontWeight = FontWeight.Bold, fontSize = 32.sp)
+                    Text(text = "Welcome To Slabber", fontWeight = FontWeight.Bold, fontSize = 32.sp)
                     Column(
                         Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -102,8 +101,11 @@ fun LoginScreen(navController: NavController) {
                             ),
                         )
                         Spacer(modifier = Modifier.height(16.dp))
+
                         Button(
-                            onClick = {},
+                            onClick = {
+                                navController.navigate(Screen.ChatList.routes)
+                            },
                             enabled = isFormValid,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(16.dp)
@@ -111,6 +113,7 @@ fun LoginScreen(navController: NavController) {
                             Text(text = "Log In")
                         }
                         Spacer(modifier = Modifier.height(12.dp))
+
                         Button(
                             onClick = {
                                 navController.navigate(Screen.SignUp.routes)
@@ -120,6 +123,7 @@ fun LoginScreen(navController: NavController) {
                         ) {
                             Text(text = "Sign Up")
                         }
+
                         Spacer(modifier = Modifier.weight(1f))
                     }
                 }

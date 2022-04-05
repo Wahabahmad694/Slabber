@@ -49,9 +49,8 @@ fun SignUpScreen(navController: NavController) {
             Spacer(modifier = Modifier.weight(0.25f))
             Card(
                 Modifier
-                    .weight(2f)
-                    .padding(8.dp),
-                shape = RoundedCornerShape(32.dp)
+                    .weight(2f),
+                shape = RoundedCornerShape(5.dp)
             ) {
                 Column(
                     Modifier
@@ -179,7 +178,7 @@ fun SignUpScreen(navController: NavController) {
                         //  ********** Button for sign up ********  //
                         Button(
                             onClick = {
-                                navController.navigate(Screen.LoginScreen.routes)
+                                navController.navigate(Screen.ChatList.routes)
                             },
                             enabled = isFormValid,
                             modifier = Modifier.fillMaxWidth(),
