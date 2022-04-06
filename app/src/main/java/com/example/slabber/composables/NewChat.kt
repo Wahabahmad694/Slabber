@@ -8,8 +8,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -22,18 +20,18 @@ import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.example.slabber.R
 import com.example.slabber.models.User
-import com.example.slabber.viewModels.ChatListViewModel
+import com.example.slabber.viewModels.AuthViewModel
 
 @Composable
 fun NewChat(navController: NavController) {
-    val chatViewModel = ChatListViewModel()
+    val chatViewModel = AuthViewModel()
     Surface {
-        NewChat(newChatList = chatViewModel.chatListResponse)
-        chatViewModel.getChatList()
+        NewChat(newChatList = chatViewModel.allUserResponse)
+        chatViewModel.allUsers()
     }
 }
 
-//********** List View Item  ********* //
+// region list view item
 @Composable
 fun NewChatItem(user: User) {
     Card(
@@ -54,7 +52,7 @@ fun NewChatItem(user: User) {
 
                 Image(
                     painter = rememberImagePainter(
-                        data = user.imageUrl,
+                        data = "",
                         builder = {
                             scale(coil.size.Scale.FIT)
                             placeholder(R.drawable.bg_placeholder_user)
@@ -62,7 +60,7 @@ fun NewChatItem(user: User) {
 
                         }
                     ),
-                    contentDescription = user.desc,
+                    contentDescription = "",
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight(0.2f)
@@ -83,7 +81,7 @@ fun NewChatItem(user: User) {
                         color = Color.White
                     )
                     Text(
-                        text = user.desc,
+                        text = user.email,
                         style = MaterialTheme.typography.body1,
                         maxLines = 1,
                         color = Color.White
@@ -99,8 +97,8 @@ fun NewChatItem(user: User) {
         modifier = Modifier.padding(horizontal = 8.dp)
     )
 }
+// endregion list view item
 
-//********** List View   ********* //
 @Composable
 fun NewChat(newChatList: List<User>) {
     Scaffold(backgroundColor = MaterialTheme.colors.onSecondary) {

@@ -15,21 +15,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.example.slabber.R
-import com.example.slabber.models.User
+import com.example.slabber.models.Thread
 import com.example.slabber.screens.Screen
-import com.example.slabber.viewModels.ChatListViewModel
+import com.example.slabber.viewModels.AuthViewModel
 
 @Composable
 fun ChatList(navController: NavController) {
-    val chatViewModel = ChatListViewModel()
+    val chatViewModel = viewModel<AuthViewModel>()
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -46,8 +46,8 @@ fun ChatList(navController: NavController) {
         }
     ) {
         Surface {
-            ChatList(chatList = chatViewModel.chatListResponse)
-            chatViewModel.getChatList()
+            ChatList(chatList = chatViewModel.allThreadResponse)
+            chatViewModel.allThreads("user1")
         }
     }
 
@@ -55,7 +55,7 @@ fun ChatList(navController: NavController) {
 
 @ExperimentalCoilApi
 @Composable
-fun ChatItem(user: User) {
+fun ChatItem(thread: Thread) {
     Card(
         modifier = Modifier
             .background(Color.Black)
@@ -74,7 +74,7 @@ fun ChatItem(user: User) {
 
                 Image(
                     painter = rememberImagePainter(
-                        data = user.imageUrl,
+                        data = "",
                         builder = {
                             scale(coil.size.Scale.FIT)
                             placeholder(R.drawable.bg_placeholder_user)
@@ -82,7 +82,7 @@ fun ChatItem(user: User) {
 
                         }
                     ),
-                    contentDescription = user.desc,
+                    contentDescription = "",
                     modifier = Modifier
                         .fillMaxHeight()
                         .weight(0.2f)
@@ -97,22 +97,13 @@ fun ChatItem(user: User) {
                         .weight(0.8f)
                 ) {
                     Text(
-                        text = user.name,
+                        text = thread._id ?: "",
                         style = MaterialTheme.typography.subtitle1,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
                     Text(
-                        text = user.category,
-                        style = MaterialTheme.typography.caption,
-                        modifier = Modifier
-                            .background(
-                                Color.LightGray
-                            )
-                            .padding(4.dp)
-                    )
-                    Text(
-                        text = user.desc,
+                        text = thread.chat.firstOrNull()?.message ?: "",
                         style = MaterialTheme.typography.body1,
                         maxLines = 1,
                         color = Color.White
@@ -129,7 +120,7 @@ fun ChatItem(user: User) {
 }
 
 @Composable
-fun ChatList(chatList: List<User>) {
+fun ChatList(chatList: List<Thread>) {
     Scaffold(backgroundColor = MaterialTheme.colors.onSecondary) {
         Column(
             Modifier
@@ -149,7 +140,7 @@ fun ChatList(chatList: List<User>) {
 
             LazyColumn {
                 itemsIndexed(items = chatList) { _, item ->
-                    ChatItem(user = item)
+                    ChatItem(thread = item)
                 }
             }
         }
