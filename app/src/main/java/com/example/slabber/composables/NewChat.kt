@@ -33,6 +33,7 @@ fun NewChat(navController: NavController) {
     }
 }
 
+//********** List View Item  ********* //
 @Composable
 fun NewChatItem(user: User) {
     Card(
@@ -91,6 +92,7 @@ fun NewChatItem(user: User) {
             }
         }
     }
+    //********** Line Separator  ********* //
     Divider(
         color = Color.LightGray,
         thickness = 1.dp,
@@ -98,6 +100,7 @@ fun NewChatItem(user: User) {
     )
 }
 
+//********** List View   ********* //
 @Composable
 fun NewChat(newChatList: List<User>) {
     Scaffold(backgroundColor = MaterialTheme.colors.onSecondary) {

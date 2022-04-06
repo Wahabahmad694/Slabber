@@ -1,7 +1,6 @@
 package com.example.slabber.composables
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -124,9 +123,13 @@ fun LoginScreen(navController: NavController) {
                             },
                             enabled = isFormValid,
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(Color.Blue)
                         ) {
-                            Text(text = "Log In")
+                            Text(
+                                text = "Log In",
+                                color = Color.White
+                            )
                         }
                         Spacer(modifier = Modifier.height(12.dp))
 
@@ -135,10 +138,15 @@ fun LoginScreen(navController: NavController) {
                             onClick = {
                                 navController.navigate(Screen.SignUp.routes)
                             },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp)
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(Color.Blue)
                         ) {
-                            Text(text = "Sign Up")
+                            Text(
+                                text = "Sign Up",
+                                color = Color.White
+                            )
                         }
                     }
                 }

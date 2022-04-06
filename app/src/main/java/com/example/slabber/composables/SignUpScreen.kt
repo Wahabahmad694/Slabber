@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -40,7 +41,7 @@ fun SignUpScreen(navController: NavController) {
         username.isNotBlank() && phoneNo.isNotBlank() && email.isNotBlank()
     }
 
-    Scaffold(backgroundColor = MaterialTheme.colors.primary) {
+    Scaffold(backgroundColor = MaterialTheme.colors.onSecondary) {
         Column(
             Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -55,7 +56,7 @@ fun SignUpScreen(navController: NavController) {
             )
             Card(
                 Modifier
-                    .weight(0.75f),
+                    .weight(1.25f),
                 shape = RoundedCornerShape(5.dp)
             ) {
                 Column(
@@ -66,11 +67,11 @@ fun SignUpScreen(navController: NavController) {
                     Text(
                         text = "Create an Account",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 32.sp,
+                        fontSize = 30.sp,
                         fontFamily = FontFamily.Serif,
                         textAlign = TextAlign.Justify
                     )
-                    Spacer(modifier = Modifier.padding(20.dp))
+                    Spacer(modifier = Modifier.padding(15.dp))
                     Column(
                         Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -146,9 +147,13 @@ fun SignUpScreen(navController: NavController) {
                             },
                             enabled = isFormValid,
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(Color.Blue)
                         ) {
-                            Text(text = "Sign Up")
+                            Text(
+                                text = "Sign Up",
+                                color = Color.White
+                            )
                         }
                     }
                 }
