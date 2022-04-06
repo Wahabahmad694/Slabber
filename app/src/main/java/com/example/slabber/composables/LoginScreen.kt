@@ -11,11 +11,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -24,6 +25,8 @@ import com.example.slabber.screens.Screen
 
 @Composable
 fun LoginScreen(navController: NavController) {
+
+    //********** State Handling ********* //
     var email by remember {
         mutableStateOf("")
     }
@@ -34,37 +37,46 @@ fun LoginScreen(navController: NavController) {
         email.isNotBlank() && username.isNotBlank()
     }
 
-    Scaffold(backgroundColor = MaterialTheme.colors.primary) {
+    //********** Main Layout ********* //
+    Scaffold(backgroundColor = MaterialTheme.colors.onSecondary) {
         Column(
             Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
             Image(
-                painter = painterResource(id = R.drawable.bg_logo),
+                painter = painterResource(id = R.drawable.ic_chat),
                 contentDescription = "App Logo",
                 modifier = Modifier
-                    .weight(1f)
-                    .size(100.dp),
-                colorFilter = ColorFilter.tint(Color.White)
+                    .weight(0.60f)
+                    .size(200.dp),
             )
+            //********** Card View  ********* //
             Card(
                 Modifier
-                    .weight(2f),
+                    .weight(0.75f),
                 shape = RoundedCornerShape(5.dp)
             ) {
                 Column(
                     Modifier
+//                        .background(Color.White)
                         .fillMaxSize()
                         .padding(32.dp)
                 ) {
-                    Text(text = "Welcome To Slabber", fontWeight = FontWeight.Bold, fontSize = 32.sp)
+                    Text(
+                        text = "Welcome To Slabber",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 28.sp,
+                        fontFamily = FontFamily.Serif,
+                        textAlign = TextAlign.Justify
+                    )
                     Column(
                         Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Spacer(modifier = Modifier.weight(1f))
+
+                        //********** User Name Edit text ********* //
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             value = username,
@@ -81,6 +93,8 @@ fun LoginScreen(navController: NavController) {
                             }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
+
+                        //********** User Name Edit text ********* //
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             value = email,
@@ -102,29 +116,38 @@ fun LoginScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(16.dp))
 
+                        //********** SignIn button ********* //
                         Button(
                             onClick = {
                                 navController.navigate(Screen.ChatList.routes)
                             },
                             enabled = isFormValid,
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(Color.Blue)
                         ) {
-                            Text(text = "Log In")
+                            Text(
+                                text = "Log In",
+                                color = Color.White
+                            )
                         }
                         Spacer(modifier = Modifier.height(12.dp))
 
+                        //********** SignUp Button ********* //
                         Button(
                             onClick = {
                                 navController.navigate(Screen.SignUp.routes)
                             },
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp)
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(Color.Blue)
                         ) {
-                            Text(text = "Sign Up")
+                            Text(
+                                text = "Sign Up",
+                                color = Color.White
+                            )
                         }
-
-                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }

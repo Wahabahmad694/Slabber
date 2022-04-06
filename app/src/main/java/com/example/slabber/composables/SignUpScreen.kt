@@ -1,5 +1,6 @@
 package com.example.slabber.composables
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -9,12 +10,17 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.slabber.R
 import com.example.slabber.screens.Screen
 
 @Composable
@@ -30,26 +36,27 @@ fun SignUpScreen(navController: NavController) {
     var email by remember {
         mutableStateOf("")
     }
-    var password by remember {
-        mutableStateOf("")
-    }
-    var confirmPassword by remember {
-        mutableStateOf("")
-    }
+
     val isFormValid by derivedStateOf {
-        username.isNotBlank() && phoneNo.isNotBlank() && email.isNotBlank() && password.length >= 6 && password == confirmPassword
+        username.isNotBlank() && phoneNo.isNotBlank() && email.isNotBlank()
     }
 
-    Scaffold(backgroundColor = MaterialTheme.colors.primary) {
+    Scaffold(backgroundColor = MaterialTheme.colors.onSecondary) {
         Column(
             Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            Spacer(modifier = Modifier.weight(0.25f))
+            Image(
+                painter = painterResource(id = R.drawable.signup),
+                contentDescription = "App Logo",
+                modifier = Modifier
+                    .weight(0.60f)
+                    .size(200.dp),
+            )
             Card(
                 Modifier
-                    .weight(2f),
+                    .weight(1.25f),
                 shape = RoundedCornerShape(5.dp)
             ) {
                 Column(
@@ -60,9 +67,11 @@ fun SignUpScreen(navController: NavController) {
                     Text(
                         text = "Create an Account",
                         fontWeight = FontWeight.Bold,
-                        fontSize = 32.sp
+                        fontSize = 30.sp,
+                        fontFamily = FontFamily.Serif,
+                        textAlign = TextAlign.Justify
                     )
-                    Spacer(modifier = Modifier.padding(20.dp))
+                    Spacer(modifier = Modifier.padding(15.dp))
                     Column(
                         Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -131,50 +140,6 @@ fun SignUpScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        //  ********** Edit text for  password ********  //
-                        OutlinedTextField(
-                            modifier = Modifier.fillMaxWidth(),
-                            value = password,
-                            onValueChange = { password = it },
-                            label = { Text(text = "Password") },
-                            trailingIcon = {
-                                if (password.isNotBlank())
-                                    IconButton(onClick = { password = "" }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Clear,
-                                            contentDescription = ""
-                                        )
-                                    }
-                            },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Password,
-                                imeAction = ImeAction.Done
-                            ),
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        //  ********** Edit text for confirm password ********  //
-                        OutlinedTextField(
-                            modifier = Modifier.fillMaxWidth(),
-                            value = confirmPassword,
-                            onValueChange = { confirmPassword = it },
-                            label = { Text(text = "Confirm Password") },
-                            trailingIcon = {
-                                if (confirmPassword.isNotBlank())
-                                    IconButton(onClick = { password = "" }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Clear,
-                                            contentDescription = ""
-                                        )
-                                    }
-                            },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Password,
-                                imeAction = ImeAction.Done
-                            ),
-                        )
-                        Spacer(modifier = Modifier.padding(25.dp))
-
                         //  ********** Button for sign up ********  //
                         Button(
                             onClick = {
@@ -182,11 +147,14 @@ fun SignUpScreen(navController: NavController) {
                             },
                             enabled = isFormValid,
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(Color.Blue)
                         ) {
-                            Text(text = "Sign Up")
+                            Text(
+                                text = "Sign Up",
+                                color = Color.White
+                            )
                         }
-                        Spacer(modifier = Modifier.weight(0.75f))
                     }
                 }
             }
