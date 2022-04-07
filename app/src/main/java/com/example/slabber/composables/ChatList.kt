@@ -2,6 +2,7 @@ package com.example.slabber.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -46,7 +47,7 @@ fun ChatList(navController: NavController) {
         }
     ) {
         Surface {
-            ChatList(chatList = chatViewModel.allThreadResponse)
+            ChatList(chatList = chatViewModel.allThreadResponse, navController = navController)
             chatViewModel.allThreads("user1")
         }
     }
@@ -61,8 +62,7 @@ fun ChatItem(thread: Thread) {
             .background(Color.Black)
             .padding(8.dp, 4.dp)
             .fillMaxWidth()
-            .height(80.dp), shape = RoundedCornerShape(8.dp), elevation = 4.dp
-
+            .height(80.dp), shape = RoundedCornerShape(1.dp), elevation = 4.dp
     ) {
         Surface {
             Row(
@@ -120,27 +120,36 @@ fun ChatItem(thread: Thread) {
 }
 
 @Composable
-fun ChatList(chatList: List<Thread>) {
-    Scaffold(backgroundColor = MaterialTheme.colors.onSecondary) {
+fun ChatList(chatList: List<Thread>, navController: NavController) {
+    Scaffold(backgroundColor = Color.LightGray) {
         Column(
             Modifier
                 .padding(top = 20.dp, start = 8.dp, end = 8.dp)
                 .fillMaxSize()
         ) {
-            Text(
-                text = "Chats",
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 32.sp,
-                fontFamily = FontFamily.Serif,
-                textAlign = TextAlign.Justify,
-                color = Color.White
-            )
-
+            Row(
+                Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "Chats",
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 32.sp,
+                    textAlign = TextAlign.Center,
+                    fontFamily = FontFamily.Serif,
+                    color = Color.Black,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             Spacer(modifier = Modifier.height(15.dp))
 
             LazyColumn {
                 itemsIndexed(items = chatList) { _, item ->
-                    ChatItem(thread = item)
+                    Surface(modifier = Modifier.clickable {
+                        navController.navigate(Screen.ChatDetail.routes)
+                    }) {
+                        ChatItem(thread = item)
+                    }
                 }
             }
         }
