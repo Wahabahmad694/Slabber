@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.slabber.R
+import com.example.slabber.data.DataHolder
 import com.example.slabber.models.User
 import com.example.slabber.screens.Screen
 import com.example.slabber.viewModels.AuthViewModel
@@ -45,6 +46,7 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = vi
     }
 
     authViewModel.signupResponse?.let {
+        DataHolder.to = it
         authViewModel.signupResponse = null
         navController.navigate(Screen.ChatList.routes) {
             popUpTo(Screen.LoginScreen.routes) {

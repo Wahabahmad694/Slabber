@@ -1,5 +1,6 @@
 package com.example.slabber.composables
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,14 +18,74 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.slabber.ChatApp
+import com.example.slabber.data.DataHolder
+import com.example.slabber.models.*
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import org.json.JSONObject
 
 @Composable
 fun ChatDetail() {
-    MessagesList()
+    var thread by remember { mutableStateOf<Thread?>(null) }
+    val gson by remember { mutableStateOf(Gson()) }
+    var socketInitialize by remember { mutableStateOf(false) }
+
+    val socket = (LocalContext.current.applicationContext as ChatApp).socket
+    socket.on("getOrCreateThread") {
+        it.firstOrNull()?.let {
+            val jsonParser = JsonParser()
+            val gsonObject = jsonParser.parse(it.toString()) as JsonObject
+            val jsonObject = gson.toJson(gsonObject)
+            val threadResponse = gson.fromJson(jsonObject, SocketThreadResponse::class.java)
+            if (threadResponse.code != 200) {
+                Log.d("socketTesting", threadResponse.message ?: "No message for error")
+            } else {
+                thread = threadResponse.thread!!
+            }
+        }
+    }
+
+    thread?._id?.let {
+        socket.on(it) {
+            it.firstOrNull()?.let {
+                val jsonParser = JsonParser()
+                val gsonObject = jsonParser.parse(it.toString()) as JsonObject
+                val jsonObject = gson.toJson(gsonObject)
+                val threadResponse = gson.fromJson(jsonObject, SocketThreadResponse::class.java)
+                if (threadResponse.code != 200) {
+                    Log.d("socketTesting", threadResponse.message ?: "No message for error")
+                } else {
+                    thread = threadResponse.thread!!
+                }
+            }
+        }
+    }
+
+    MessagesList(thread) {
+        val threadId = thread?._id ?: return@MessagesList
+        val chat = Chat(null, it, DataHolder.to!!, "TEXT", null)
+        val messageReq = SendMessageReq(threadId, chat)
+        socket.emit("newMessage", JSONObject(gson.toJson(messageReq).toString()))
+    }
+
+
+    if (!socketInitialize) {
+        socket.connect()
+        val getOrCreateThreadResponse = GetOrCreateThreadReq(DataHolder.chatUsers!!)
+        socket.emit(
+            "getOrCreateThread",
+            JSONObject(gson.toJson(getOrCreateThreadResponse).toString())
+        )
+
+        socketInitialize = true
+    }
 }
 
 @Composable
@@ -58,7 +119,7 @@ fun MessageCard(msg: String, ownMsg: Boolean) {
 
 
 @Composable
-fun MessagesList() {
+fun MessagesList(thread: Thread?, sendNewMessage: (msg: String) -> Unit) {
 
     var message by remember {
         mutableStateOf("")
@@ -73,15 +134,9 @@ fun MessagesList() {
                     .background(Color.LightGray)
             ) {
                 itemsIndexed(
-                    items = listOf(
-                        "Hi",
-                        "Hello",
-                        "How are you?",
-                        "I am fine"
-                    )
-                ) { index, item ->
-//                    MessagesListItem(item)
-                    MessageCard(msg = item, ownMsg = index.rem(2) != 0)
+                    items = thread?.chat ?: listOf()
+                ) { _, item ->
+                    MessageCard(msg = item.message, item.sender._id == DataHolder.to!!._id)
                 }
             }
             Spacer(modifier = Modifier.height(5.dp))
@@ -101,7 +156,11 @@ fun MessagesList() {
                 IconButton(modifier = Modifier
                     .align(CenterVertically)
                     .then(Modifier.size(35.dp)),
-                    onClick = { }) {
+                    onClick = {
+                        sendNewMessage(message)
+                        message = ""
+                    }
+                ) {
                     Icon(
                         Icons.Filled.Send,
                         "contentDescription",

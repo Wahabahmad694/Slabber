@@ -24,6 +24,7 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.example.slabber.R
+import com.example.slabber.data.DataHolder
 import com.example.slabber.models.Thread
 import com.example.slabber.screens.Screen
 import com.example.slabber.viewModels.AuthViewModel
@@ -48,7 +49,7 @@ fun ChatList(navController: NavController) {
     ) {
         Surface {
             ChatList(chatList = chatViewModel.allThreadResponse, navController = navController)
-            chatViewModel.allThreads("user1")
+            chatViewModel.allThreads(DataHolder.to!!._id!!)
         }
     }
 
@@ -146,6 +147,7 @@ fun ChatList(chatList: List<Thread>, navController: NavController) {
             LazyColumn {
                 itemsIndexed(items = chatList) { _, item ->
                     Surface(modifier = Modifier.clickable {
+                        DataHolder.chatUsers = item.users
                         navController.navigate(Screen.ChatDetail.routes)
                     }) {
                         ChatItem(thread = item)

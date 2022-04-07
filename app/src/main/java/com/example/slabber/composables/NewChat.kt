@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.example.slabber.R
+import com.example.slabber.data.DataHolder
 import com.example.slabber.models.User
 import com.example.slabber.screens.Screen
 import com.example.slabber.viewModels.AuthViewModel
@@ -128,10 +129,10 @@ fun NewChat(newChatList: List<User>, navController: NavController) {
             LazyColumn {
                 itemsIndexed(items = newChatList) { _, item ->
                     Surface(modifier = Modifier.clickable {
+                        DataHolder.chatUsers = listOf(DataHolder.to!!, item)
                         navController.navigate(Screen.ChatDetail.routes)
                     }) {
                         NewChatItem(user = item)
-
                     }
                 }
             }

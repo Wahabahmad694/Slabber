@@ -10,7 +10,7 @@ import com.example.slabber.screens.Screen
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.ChatDetail.routes) {
+    NavHost(navController = navController, startDestination = Screen.LoginScreen.routes) {
         composable(route = Screen.LoginScreen.routes) {
             LoginScreen(navController = navController)
         }

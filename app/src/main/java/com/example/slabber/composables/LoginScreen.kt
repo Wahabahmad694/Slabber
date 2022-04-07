@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.slabber.R
+import com.example.slabber.data.DataHolder
 import com.example.slabber.screens.Screen
 import com.example.slabber.viewModels.AuthViewModel
 
@@ -40,6 +41,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
     }
 
     authViewModel.loginResponse?.let {
+        DataHolder.to = it
         authViewModel.loginResponse = null
         navController.navigate(Screen.ChatList.routes) {
             popUpTo(Screen.LoginScreen.routes) {
@@ -130,7 +132,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
                         //********** SignIn button ********* //
                         Button(
                             onClick = {
-                                navController.navigate(Screen.ChatList.routes)
+                                authViewModel.login(email)
                             },
                             enabled = isFormValid,
                             modifier = Modifier.fillMaxWidth(),
@@ -147,7 +149,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
                         //********** SignUp Button ********* //
                         Button(
                             onClick = {
-                                authViewModel.login(email)
+                                navController.navigate(Screen.SignUp.routes)
                             },
                             modifier = Modifier
                                 .fillMaxWidth(),
