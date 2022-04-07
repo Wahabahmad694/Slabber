@@ -19,12 +19,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.slabber.R
+import com.example.slabber.models.User
 import com.example.slabber.screens.Screen
+import com.example.slabber.viewModels.AuthViewModel
 
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
 
     //********** State Handling ********* //
     var username by remember {
@@ -38,7 +41,16 @@ fun SignUpScreen(navController: NavController) {
     }
 
     val isFormValid by derivedStateOf {
-        username.isNotBlank() && phoneNo.isNotBlank() && email.isNotBlank()
+        username.isNotBlank() /*&& phoneNo.isNotBlank()*/ && email.isNotBlank()
+    }
+
+    authViewModel.signupResponse?.let {
+        authViewModel.signupResponse = null
+        navController.navigate(Screen.ChatList.routes) {
+            popUpTo(Screen.LoginScreen.routes) {
+                inclusive = true
+            }
+        }
     }
 
     Scaffold(backgroundColor = MaterialTheme.colors.onSecondary) {
@@ -143,7 +155,8 @@ fun SignUpScreen(navController: NavController) {
                         //  ********** Button for sign up ********  //
                         Button(
                             onClick = {
-                                navController.navigate(Screen.ChatList.routes)
+                                val user = User(null, email, username)
+                                authViewModel.signup(user)
                             },
                             enabled = isFormValid,
                             modifier = Modifier.fillMaxWidth(),

@@ -19,12 +19,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.slabber.R
 import com.example.slabber.screens.Screen
+import com.example.slabber.viewModels.AuthViewModel
 
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
 
     //********** State Handling ********* //
     var email by remember {
@@ -35,6 +37,15 @@ fun LoginScreen(navController: NavController) {
     }
     val isFormValid by derivedStateOf {
         email.isNotBlank() && username.isNotBlank()
+    }
+
+    authViewModel.loginResponse?.let {
+        authViewModel.loginResponse = null
+        navController.navigate(Screen.ChatList.routes) {
+            popUpTo(Screen.LoginScreen.routes) {
+                inclusive = true
+            }
+        }
     }
 
     //********** Main Layout ********* //
@@ -136,7 +147,7 @@ fun LoginScreen(navController: NavController) {
                         //********** SignUp Button ********* //
                         Button(
                             onClick = {
-                                navController.navigate(Screen.SignUp.routes)
+                                authViewModel.login(email)
                             },
                             modifier = Modifier
                                 .fillMaxWidth(),

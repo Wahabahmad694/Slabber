@@ -1,8 +1,7 @@
 package com.example.slabber.models
 
 data class User(
-    val name: String,
-    val imageUrl: String,
-    val desc: String,
-    val category: String
+    val _id: String?,
+    val email: String,
+    val name: String
 )
