@@ -60,7 +60,7 @@ fun ChatList(navController: NavController) {
 fun ChatItem(thread: Thread) {
     Card(
         modifier = Modifier
-            .background(Color.Black)
+            .background(Color.White)
             .padding(8.dp, 4.dp)
             .fillMaxWidth()
             .height(80.dp), shape = RoundedCornerShape(1.dp), elevation = 4.dp
@@ -101,20 +101,20 @@ fun ChatItem(thread: Thread) {
                         text = thread._id ?: "",
                         style = MaterialTheme.typography.subtitle1,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = Color.Black
                     )
                     Text(
                         text = thread.chat.firstOrNull()?.message ?: "",
                         style = MaterialTheme.typography.body1,
                         maxLines = 1,
-                        color = Color.White
+                        color = Color.Black
                     )
                 }
             }
         }
     }
     Divider(
-        color = Color.LightGray,
+        color = Color.DarkGray,
         thickness = 1.dp,
         modifier = Modifier.padding(horizontal = 8.dp)
     )

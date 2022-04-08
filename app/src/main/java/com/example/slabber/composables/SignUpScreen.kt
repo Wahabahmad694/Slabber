@@ -1,12 +1,16 @@
 package com.example.slabber.composables
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,7 +59,7 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = vi
         }
     }
 
-    Scaffold(backgroundColor = MaterialTheme.colors.onSecondary) {
+    Scaffold(backgroundColor = Color.LightGray) {
         Column(
             Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -70,8 +74,8 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = vi
             )
             Card(
                 Modifier
-                    .weight(1.25f),
-                shape = RoundedCornerShape(5.dp)
+                    .weight(1f),
+                shape = RoundedCornerShape(8.dp)
             ) {
                 Column(
                     Modifier
@@ -85,7 +89,6 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = vi
                         fontFamily = FontFamily.Serif,
                         textAlign = TextAlign.Justify
                     )
-                    Spacer(modifier = Modifier.padding(15.dp))
                     Column(
                         Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,6 +99,16 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = vi
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             value = username,
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "personIcon"
+                                )
+                            },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.Red,
+                                unfocusedBorderColor = Color.Blue
+                            ),
                             onValueChange = { username = it },
                             label = { Text(text = "User Name") },
                             trailingIcon = {
@@ -114,6 +127,16 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = vi
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             value = phoneNo,
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Phone,
+                                    contentDescription = "phoneIcon"
+                                )
+                            },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.Red,
+                                unfocusedBorderColor = Color.Blue
+                            ),
                             onValueChange = { phoneNo = it },
                             label = { Text(text = "Phone Number") },
                             trailingIcon = {
@@ -136,6 +159,16 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = vi
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             value = email,
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Email,
+                                    contentDescription = "emailIcon"
+                                )
+                            },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.Red,
+                                unfocusedBorderColor = Color.Blue
+                            ),
                             onValueChange = { email = it },
                             label = { Text(text = "Email") },
                             trailingIcon = {
@@ -161,9 +194,10 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = vi
                                 authViewModel.signup(user)
                             },
                             enabled = isFormValid,
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth(),
                             shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(Color.Blue)
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
                         ) {
                             Text(
                                 text = "Sign Up",
