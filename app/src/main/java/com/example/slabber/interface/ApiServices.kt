@@ -40,6 +40,7 @@ interface ApiServices {
                     .addInterceptor(interceptor)
                     .connectTimeout(1, TimeUnit.MINUTES)
                     .readTimeout(1, TimeUnit.MINUTES).build()
+
                 apiServices = Retrofit.Builder()
                     .baseUrl("http://192.168.2.216:3000/api/v1/")
                     .addConverterFactory(GsonConverterFactory.create()).client(client)

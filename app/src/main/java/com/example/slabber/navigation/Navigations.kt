@@ -4,10 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.slabber.composables.ChatList
-import com.example.slabber.composables.LoginScreen
-import com.example.slabber.composables.NewChat
-import com.example.slabber.composables.SignUpScreen
+import com.example.slabber.composables.*
 import com.example.slabber.screens.Screen
 
 @Composable
@@ -28,6 +25,10 @@ fun Navigation() {
         composable(route = Screen.NewChat.routes)
         {
             NewChat(navController = navController)
+        }
+        composable(route = Screen.ChatDetail.routes)
+        {
+            ChatDetail()
         }
 
     }

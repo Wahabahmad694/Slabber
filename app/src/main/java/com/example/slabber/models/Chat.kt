@@ -5,5 +5,5 @@ data class Chat(
     val message: String,
     val sender: User,
     val mimiType: String, // value must be 'TEXT', "IMAGE"
-    val time: String //ISO Fromat
+    val time: String? //ISO Fromat
 )

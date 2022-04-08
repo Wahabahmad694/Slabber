@@ -7,6 +7,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.slabber.R
+import com.example.slabber.data.DataHolder
 import com.example.slabber.screens.Screen
 import com.example.slabber.viewModels.AuthViewModel
 
@@ -40,6 +43,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
     }
 
     authViewModel.loginResponse?.let {
+        DataHolder.to = it
         authViewModel.loginResponse = null
         navController.navigate(Screen.ChatList.routes) {
             popUpTo(Screen.LoginScreen.routes) {
@@ -49,7 +53,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
     }
 
     //********** Main Layout ********* //
-    Scaffold(backgroundColor = MaterialTheme.colors.onSecondary) {
+    Scaffold(backgroundColor = Color.LightGray) {
         Column(
             Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -65,12 +69,11 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
             //********** Card View  ********* //
             Card(
                 Modifier
-                    .weight(0.75f),
-                shape = RoundedCornerShape(5.dp)
+                    .weight(.70f),
+                shape = RoundedCornerShape(8.dp)
             ) {
                 Column(
                     Modifier
-//                        .background(Color.White)
                         .fillMaxSize()
                         .padding(32.dp)
                 ) {
@@ -79,7 +82,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 28.sp,
                         fontFamily = FontFamily.Serif,
-                        textAlign = TextAlign.Justify
+                        textAlign = TextAlign.Justify,
                     )
                     Column(
                         Modifier.fillMaxSize(),
@@ -91,7 +94,17 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             value = username,
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "personIcon"
+                                )
+                            },
                             onValueChange = { username = it },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.Red,
+                                unfocusedBorderColor = Color.Blue
+                            ),
                             label = { Text(text = "Name") },
                             trailingIcon = {
                                 if (username.isNotBlank())
@@ -105,10 +118,20 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
                         )
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        //********** User Name Edit text ********* //
+                        // Email Edit text ********* //
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
                             value = email,
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Email,
+                                    contentDescription = "emailIcon"
+                                )
+                            },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Color.Red,
+                                unfocusedBorderColor = Color.Blue
+                            ),
                             onValueChange = { email = it },
                             label = { Text(text = "Email") },
                             trailingIcon = {
@@ -127,38 +150,40 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel = vie
                         )
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        //********** SignIn button ********* //
-                        Button(
-                            onClick = {
-                                navController.navigate(Screen.ChatList.routes)
-                            },
-                            enabled = isFormValid,
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(Color.Blue)
-                        ) {
-                            Text(
-                                text = "Log In",
-                                color = Color.White
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Row() {
+                            //********** SignIn button ********* //
+                            Button(
+                                modifier = Modifier.fillMaxWidth(0.50f),
+                                onClick = {
+                                    authViewModel.login(email)
+                                },
+                                enabled = isFormValid,
+                                shape = RoundedCornerShape(16.dp),
+                                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                            ) {
+                                Text(
+                                    text = "Log In",
+                                    color = Color.White
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(5.dp))
 
-                        //********** SignUp Button ********* //
-                        Button(
-                            onClick = {
-                                authViewModel.login(email)
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(Color.Blue)
-                        ) {
-                            Text(
-                                text = "Sign Up",
-                                color = Color.White
-                            )
+                            //********** SignUp Button ********* //
+                            Button(
+                                modifier = Modifier.fillMaxWidth(1f),
+                                onClick = {
+                                    navController.navigate(Screen.SignUp.routes)
+                                },
+                                shape = RoundedCornerShape(16.dp),
+                                colors = ButtonDefaults.buttonColors(Color.Blue)
+                            ) {
+                                Text(
+                                    text = "Sign Up",
+                                    color = Color.White
+                                )
+                            }
                         }
+
                     }
                 }
             }

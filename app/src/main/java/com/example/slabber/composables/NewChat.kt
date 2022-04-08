@@ -2,6 +2,7 @@ package com.example.slabber.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -19,19 +20,21 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import com.example.slabber.R
+import com.example.slabber.data.DataHolder
 import com.example.slabber.models.User
+import com.example.slabber.screens.Screen
 import com.example.slabber.viewModels.AuthViewModel
 
 @Composable
 fun NewChat(navController: NavController) {
     val chatViewModel = AuthViewModel()
     Surface {
-        NewChat(newChatList = chatViewModel.allUserResponse)
+        NewChat(newChatList = chatViewModel.allUserResponse, navController = navController)
         chatViewModel.allUsers()
     }
 }
 
-// region list view item
+//********** List View Item  ********* //
 @Composable
 fun NewChatItem(user: User) {
     Card(
@@ -100,8 +103,8 @@ fun NewChatItem(user: User) {
 // endregion list view item
 
 @Composable
-fun NewChat(newChatList: List<User>) {
-    Scaffold(backgroundColor = MaterialTheme.colors.onSecondary) {
+fun NewChat(newChatList: List<User>, navController: NavController) {
+    Scaffold(backgroundColor = Color.LightGray) {
         Column(
             Modifier
                 .padding(top = 20.dp, start = 8.dp, end = 8.dp)
@@ -115,16 +118,22 @@ fun NewChat(newChatList: List<User>) {
                     text = "New Chat",
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 32.sp,
-                    fontFamily = FontFamily.Serif,
                     textAlign = TextAlign.Center,
-                    color = Color.White
+                    fontFamily = FontFamily.Serif,
+                    color = Color.Black,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
 
             Spacer(modifier = Modifier.height(15.dp))
             LazyColumn {
                 itemsIndexed(items = newChatList) { _, item ->
-                    NewChatItem(user = item)
+                    Surface(modifier = Modifier.clickable {
+                        DataHolder.chatUsers = listOf(DataHolder.to!!, item)
+                        navController.navigate(Screen.ChatDetail.routes)
+                    }) {
+                        NewChatItem(user = item)
+                    }
                 }
             }
         }
