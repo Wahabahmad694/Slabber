@@ -24,11 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
-import coil.size.Scale
-import coil.transform.CircleCropTransformation
 import com.example.slabber.ChatApp
-import com.example.slabber.R
 import com.example.slabber.data.DataHolder
 import com.example.slabber.models.*
 import com.google.gson.Gson
