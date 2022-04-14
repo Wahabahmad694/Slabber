@@ -1,6 +1,14 @@
 package com.example.slabber.composables
 
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.util.Base64
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,8 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -31,6 +38,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 
 @Composable
 fun ChatDetail() {
@@ -114,6 +122,11 @@ fun MessageCard(msg: String, ownMsg: Boolean) {
                 modifier = Modifier.padding(all = 4.dp),
                 style = MaterialTheme.typography.body2
             )
+            Icon(
+                Icons.Filled.Done,
+                "MessageStatus",
+                tint = Color.Gray
+            )
         }
     }
 }
@@ -124,6 +137,11 @@ fun MessagesList(thread: Thread?, sendNewMessage: (msg: String) -> Unit) {
 
     var message by remember {
         mutableStateOf("")
+    }
+
+    val context = LocalContext.current
+    val bitmap = remember {
+        mutableStateOf<Bitmap?>(null)
     }
 
     Scaffold(
@@ -143,6 +161,33 @@ fun MessagesList(thread: Thread?, sendNewMessage: (msg: String) -> Unit) {
             )
         }) {
         Column {
+
+            var imageUri by remember {
+                mutableStateOf<Uri?>(null)
+            }
+
+            val launcher = rememberLauncherForActivityResult(
+                contract =
+                ActivityResultContracts.GetContent()
+            ) { uri: Uri? ->
+                imageUri = uri
+            }
+
+            imageUri?.let {
+                if (Build.VERSION.SDK_INT < 28) {
+                    bitmap.value = MediaStore.Images
+                        .Media.getBitmap(context.contentResolver, it)
+
+                } else {
+                    val source = ImageDecoder
+                        .createSource(context.contentResolver, it)
+                    bitmap.value = ImageDecoder.decodeBitmap(source)
+                    val stringBitmap = encodeImage(bitmap.value!!)
+                    Log.d("Hello", stringBitmap!!)
+
+                }
+            }
+
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
@@ -155,8 +200,23 @@ fun MessagesList(thread: Thread?, sendNewMessage: (msg: String) -> Unit) {
                     MessageCard(msg = item.message, item.sender._id == DataHolder.to!!._id)
                 }
             }
+
             Spacer(modifier = Modifier.height(5.dp))
             Row {
+
+                IconButton(modifier = Modifier
+                    .align(CenterVertically)
+                    .then(Modifier.size(35.dp)),
+                    onClick = {
+                        launcher.launch("image/*")
+                    }
+                ) {
+                    Icon(
+                        Icons.Filled.Add,
+                        "Add image",
+                        tint = Color.Black
+                    )
+                }
                 TextField(
                     value = message,
                     keyboardOptions = KeyboardOptions(
@@ -186,4 +246,11 @@ fun MessagesList(thread: Thread?, sendNewMessage: (msg: String) -> Unit) {
             }
         }
     }
+}
+
+private fun encodeImage(bm: Bitmap): String? {
+    val byteStream = ByteArrayOutputStream()
+    bm.compress(Bitmap.CompressFormat.JPEG, 100, byteStream)
+    val byteArray = byteStream.toByteArray()
+    return Base64.encodeToString(byteArray, Base64.DEFAULT)
 }
