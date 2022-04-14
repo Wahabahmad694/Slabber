@@ -1,20 +1,28 @@
 package com.example.slabber.composables
 
+
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.util.Base64
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -30,6 +38,7 @@ import com.example.slabber.data.DataHolder
 import com.example.slabber.models.User
 import com.example.slabber.screens.Screen
 import com.example.slabber.viewModels.AuthViewModel
+import java.io.ByteArrayOutputStream
 
 @Composable
 fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
@@ -210,3 +219,10 @@ fun SignUpScreen(navController: NavController, authViewModel: AuthViewModel = vi
         }
     }
 }
+private fun encodeImage(bm: Bitmap): String? {
+    val baos = ByteArrayOutputStream()
+    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    val b = baos.toByteArray()
+    return Base64.encodeToString(b, Base64.DEFAULT)
+}
+
